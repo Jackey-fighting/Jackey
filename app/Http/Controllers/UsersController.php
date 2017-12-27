@@ -26,6 +26,8 @@ class UsersController extends Controller
     		'email'=>$request->email,
     		'password'=>bcrypt($request->password)
     	]);
+
+        Auth::login($user);//已注册的用户进行登录
     	session()->flash('success', 'welcome to here, you will open the new trip.');
     	return redirect()->route('users.show', compact('user')) ;
     }

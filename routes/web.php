@@ -22,4 +22,7 @@ Route::get('/about', 'StaticPagesController@about')->name('about');
 
 Route::get('signup', 'UsersController@create')->name('signup');//URI看来，/signup 和signup是一样
 Route::resource('users', 'UsersController');
-
+//route about session
+Route::get('login', 'SessionController@create')->name('login');
+Route::post('login', 'SessionController@store')->name('login');
+Route::delete('logout', 'SessionController@destroy')->name('logout');
