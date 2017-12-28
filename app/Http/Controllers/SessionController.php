@@ -7,6 +7,13 @@ use Auth;
 
 class SessionController extends Controller
 {
+	//只显示登录，注册的页面给游客
+	public function __construct(){
+		$this->middleware('guest', [
+			'only'=>['create']
+		]);
+	}
+
     public function create(){
     	return view('sessions.create');
     }
@@ -20,7 +27,8 @@ class SessionController extends Controller
     	if (Auth::attempt($credentials, $request->has('remember'))) {
     		//登录成功的操作
     		session()->flash('success', 'Welcome to here!!!');
-    		return redirect()->route('users.show', [Auth::user()]);
+    		//redirect()->intended()这是返回上次访问的地方，避免再次登录，如果上次没有，则默认填写的地址
+    		return redirect()->intended(route('users.show', [Auth::user()]));
     	}else{
     		//登录失败的操作
     		session()->flash('danger', 'sorry, your email and password is wrong.');

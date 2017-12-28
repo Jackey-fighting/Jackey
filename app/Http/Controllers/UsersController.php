@@ -4,8 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Validator;
 class UsersController extends Controller
-{
+{   //进行中间件过滤
+    public function __construct(){
+        $this->middleware('auth', [
+            'except'=>['show', 'create', 'store', 'index']
+        ]);
+        $this->middleware('guest', [
+            'only'=>['create']
+        ]);
+    }
+
     public function create(){
     	return view('users.create');
     }
@@ -31,5 +41,43 @@ class UsersController extends Controller
     	session()->flash('success', 'welcome to here, you will open the new trip.');
     	return redirect()->route('users.show', compact('user')) ;
     }
+    //用户编辑
+    public function edit(User $user){
 
+        $this->authorize('update', $user);
+        return view('users.edit', compact('user'));
+    }
+    //更新用户信息
+    public function update(User $user,Request $request){
+        /*$this->validate($request, [
+            'name'=>'required|max:50',
+            'password'=>'required|min:6|confirmed'
+        ]);*/
+        Validator::make($request->all(), [
+            'name'=>'reuired|max:50',
+            'password'=>'nullable|min:6|confirmed'
+        ]);
+
+        $this->authorize('update',$user);
+        $data = [];
+        if ($request->password) {
+            $data['password'] = bcrypt($request->password);
+        }
+        $data['name'] = $request->name;
+        $user->update($data);
+        session()->flash('success', 'You have updated.');
+        return redirect()->route('users.show', $user->id);
+    }
+    //展示所有的用户
+    public function index(){
+        $users = User::paginate(10);
+        return view('users.index', compact('users'));
+    }
+    //删除用户
+    public function destroy(User $user){
+        $this->authorize('destroy',$user);
+        $user->delete();
+        session()->flash('success', 'You have deleted user');
+        return back();
+    }
 }
