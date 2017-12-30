@@ -3,11 +3,11 @@
 
 @section('content')
 <div class="jumbotron">
-	<h1>Hello, JackeyEting</h1>
+	<h1>Hello, Welcome to here.</h1>
 	<p class="lead">
-		你现在所看到的是<a href="http://www.baidu.com">百度首页</a>
+		Now, you will see the home of <a href="{{ route('home') }}">jackey.eting site</a>
 	</p>
-	<p>一切，将从这里开始</p>
+	<p>Everything is begin in here.</p>
 	<p>
 		<a href="{{ route('signup') }}" class="btn btn-logo btn-danger">sign up</a>
 	</p>

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
+use Mail;
+
 class UsersController extends Controller
 {   //进行中间件过滤
     public function __construct(){
         $this->middleware('auth', [
-            'except'=>['show', 'create', 'store', 'index']
+            'except'=>['show', 'create', 'store', 'index','confirmEmail']
         ]);
         $this->middleware('guest', [
             'only'=>['create']
@@ -37,8 +39,9 @@ class UsersController extends Controller
     		'password'=>bcrypt($request->password)
     	]);
 
-        Auth::login($user);//已注册的用户进行登录
-    	session()->flash('success', 'welcome to here, you will open the new trip.');
+        $this->sendEmailConfirmationTo($user);
+       // Auth::login($user);//已注册的用户进行登录
+    	session()->flash('success', 'This confirm_email is send to your email, please check it.');
     	return redirect()->route('users.show', compact('user')) ;
     }
     //用户编辑
@@ -79,5 +82,30 @@ class UsersController extends Controller
         $user->delete();
         session()->flash('success', 'You have deleted user');
         return back();
+    }
+    //邮箱发送方法
+    protected function sendEmailConfirmationTo($user){
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $from = 'Jackey@163.com';
+        $name = 'Jackey';
+        $to   = $user->email;
+        $subject = "Thanks for you to sign up in the site, please confirm in your email.";
+
+        Mail::send($view, $data, function($message) use($from, $name, $to, $subject){
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
+    }
+    //邮箱验证方法
+    public function confirmEmail($token){
+        $user = User::where('activation_token', $token)->firstOrFail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success', 'Congratulatie you have activation succsee.');
+        return redirect()->route('users.show', [$user]);
     }
 }
