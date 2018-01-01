@@ -22,7 +22,8 @@
 						<input type="password" name="password" class="form-controller" value="{{ old('password') }}">
 					</div>
 					<div class="form-group">
-						<label><input type="checkbox" name="remember">remember me</label>
+						<label><input type="checkbox" name="remember">remember me</label> | 
+						<label><a href="{{ route('password.request') }}">forgot password</a></label>
 					</div>
 
 					<button class="btn btn-primary" type="submit">sign in</button>

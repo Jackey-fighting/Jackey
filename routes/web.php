@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 //static-pages 路由
 Route::get('/', 'StaticPagesController@home')->name('home');
@@ -28,3 +25,10 @@ Route::post('login', 'SessionController@store')->name('login');
 Route::delete('logout', 'SessionController@destroy')->name('logout');
 //confirm email
 Route::get('signup/confrim/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+//Laravel自带的重置密码
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+//自己写的测试发送邮件
+Route::get('/sendEmail', 'MailController@send');
