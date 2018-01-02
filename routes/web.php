@@ -32,3 +32,5 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 //自己写的测试发送邮件
 Route::get('/sendEmail', 'MailController@send');
+//创建删除 ，增加的路由
+Route::resource('statuses', 'StatusesController', ['only'=>['store', 'destroy']]);

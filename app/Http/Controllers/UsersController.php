@@ -23,7 +23,8 @@ class UsersController extends Controller
     }
 
     public function show(User $user){//对应 Route::get('users/{user}', 'UsersController@show')
-    	return view('users.show', compact('user'));
+    	$statuses = $user->statuses()->orderBy('created_at', 'desc')->paginate(30);
+        return view('users.show', compact('user', 'statuses'));
     }
     //创建一个用户
     public function store(Request $request){
