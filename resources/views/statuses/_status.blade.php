@@ -10,10 +10,11 @@
 	</span>
 	<span class="content">{{ $status->content }}</span>
 	@can('destroy', $status)
-		<form action="{{ route('statuses.destroy', $status->id) }}" method="POST">
+		<form id="delete_form" action="{{ route('statuses.destroy', $status->id) }}" method="POST">
 			{{ method_field('DELETE') }}
 			{{ csrf_field() }}
-			<button class="btn btn-danger btn-sm status-delete-btn" type="submit">Delete</button>			
+			<button id="btn" onclick="deleteFunc()" class="btn btn-danger btn-sm status-delete-btn" type="button">Delete</button>			
 		</form>
 	@endcan
 </li>
+<script type="text/javascript" src="/js/delete_confirm.js"></script>
