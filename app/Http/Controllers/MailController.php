@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
+use App\Models\User;
+use App\Jobs\SendReminderEmail;
+
 class MailController extends Controller
 {
     public function send(){
@@ -19,5 +22,13 @@ class MailController extends Controller
     	}else{
     		echo 'Send email fail.';
     	}
+    }
+
+    //测试队列发送邮件
+    public function emialDspatch(){
+        $user = User::first();
+        
+        SendReminderEmail::dispatch($user)->onQueue('email');
+        echo 'you have done.';
     }
 }

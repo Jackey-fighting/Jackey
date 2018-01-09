@@ -10,6 +10,6 @@
 	please hit this url to finish signup :
 	<a href="{{ route('confirm_email', $user->activation_token) }}">{{ route('confirm_email',$user->activation_token) }}</a>
 </p>
-<p>If this email of you ,please ignore it.</p>
+<p>If this email it belong to you ,please ignore it.</p>
 </body>
 </html>
